@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Ethan&#39;s Blog</title>
+  
+  <subtitle>Ethanの技术博客</subtitle>
+  <link href="https://ethanzhang.cn/atom.xml" rel="self"/>
+  
+  <link href="https://ethanzhang.cn/"/>
+  <updated>2021-03-31T12:02:10.000Z</updated>
+  <id>https://ethanzhang.cn/</id>
+  
+  <author>
+    <name>Ethan Zhang</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>微服务网关与安全</title>
+    <link href="https://ethanzhang.cn/2021/03/31/wei-fu-wu-wang-guan-yu-an-quan/"/>
+    <id>https://ethanzhang.cn/2021/03/31/wei-fu-wu-wang-guan-yu-an-quan/</id>
+    <published>2021-03-31T11:55:05.000Z</published>
+    <updated>2021-03-31T12:02:10.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;API Gateway&lt;/code&gt; 网关服务作为微服务架构中系统外部与内部的网络屏障，安全策略的应用是必不可少的。我们知道在微服务架构设计中有一个重要原则，即服务的单一责任性，尤其是对于某一业务服务而言，理想状态下我们希望其仅承担某一项业务职责。而系统的安全问题是一个全局的抽象问题，我们并不希望安全策略的应用侵入到业务代码中。在大部分系统中安全检验主要是针对系统外部对系统内部的请求而言，而对于系统内部服务间的 &lt;code&gt;RPC&lt;/code&gt; 调用一般不需要进行严格的安全校验，当然一些复杂系统内部可能会分为高权限区域与低权限区域，由低到高的数据访问依然需要通过网关。因此网关服务无论作为系统内外的屏障，还是子系统间的屏障，由 &lt;code&gt;API Gateway&lt;/code&gt; 承担系统安全拦截的职责不失为是一个合理的选择，在此背景下业务服务可以更加专注到业务开发中，同时针对系统认为有风险的访问，可以将拦截行为前置到网关中，很大程度上减轻了一部分对后端业务服务的负载，同时把安全策略相关的代码从业务服务剥离后，业务服务无需加载安全相关的资源，提供了系统整体的资源利用率。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Security" scheme="https://ethanzhang.cn/tags/Spring-Security/"/>
+    
+    <category term="Spring Cloud Gateway" scheme="https://ethanzhang.cn/tags/Spring-Cloud-Gateway/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>浅谈微服务架构设计</title>
+    <link href="https://ethanzhang.cn/2021/03/02/qian-tan-wei-fu-wu-jia-gou-she-ji/"/>
+    <id>https://ethanzhang.cn/2021/03/02/qian-tan-wei-fu-wu-jia-gou-she-ji/</id>
+    <published>2021-03-02T12:13:02.000Z</published>
+    <updated>2021-03-02T12:22:26.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;“架构”一个抽象而看似高端的词汇，我们难以给它一个明确的定义。人们发明了很多描述架构的概念，单体架构、SOA架构、六边形架构、洋葱圈架构、微服务架构等。这些不同概念的定义和思想相互渗透影响，没有清晰的边界。在实践中一个系统往往是参考多种思想形成的综合性产物，因此我们很难判定一个系统究竟属于哪一种架构风格。&lt;a href=&quot;https://www.zhihu.com/question/27343287/answer/1184500866&quot;&gt;熵增理论为什么让好多人一下子就领悟了？&lt;/a&gt; 无意中看到这样一篇文章，似乎能给我们一些启发，软件架构的存在是为了保持系统要素之间的有序性，无论是软件系统还是现实世界广义上的系统，在没有外力介入的情况下，其熵增是不可避免的，万物总是从有序变得无序。一个房间，只要我们不去整理，随着时间的推移，它迟早会变得杂乱无章，而且这个过程发生得简单而自然，因为它符合熵增规律。而架构的本质是要描述一种规则，这种规则限定了在一个房间内，什么东西该放在哪里，当然即使有规则的存在，房间依然会变乱，但是我们会发现房间变乱的速度变慢了。因此我们可以这么说，&lt;strong&gt;架构可以有效地降低系统熵增的速度&lt;/strong&gt;。我们知道将一个杂乱的房间打扫干净需要耗费巨大的心力，因为逆熵增规律而动总是艰难的。在软件世界中，&lt;strong&gt;重构&lt;/strong&gt;这种行为的本质是使用外力作用于孤立系统，使之完成熵减过程。虽然重构的代价很大，但确是不可避免的，例如在一个系统不同的发展阶段，适合它的架构风格是不同的，将一个系统从单体架构演化为微服务架构必然意味着重构。当然很多情况下重构是对前期错误设计付出的代价，一个早期的微小的错误设计很可能引发蝴蝶效应，造成系统后期巨大的缺陷，当系统设计者意识到这个缺陷已经导致系统无法维护时，重构就被提上了议程，良好的架构设计就是为了减少这种不必要代价的产生。&lt;a href=&quot;https://blog.csdn.net/significantfrank/article/details/110934799&quot;&gt;COLA 4.0：应用架构的最佳实践&lt;/a&gt; 这篇博客中作者对于架构的思考可以给我们一些启发，一个良好的架构必须要达到的目的是&lt;strong&gt;关注点分离&lt;/strong&gt;，所谓的分离指的是&lt;strong&gt;业务复杂度&lt;/strong&gt;和&lt;strong&gt;技术复杂度&lt;/strong&gt;的分离，例如在开发创建订单的业务时，不应该考虑分布式锁是基于 &lt;code&gt;Redis&lt;/code&gt; 还是 &lt;code&gt;Zookeeper&lt;/code&gt; 来实现，这是两个维度的问题，技术复杂度始终不应该侵入业务复杂度，评价一个技术框架实现是否优秀的重要指标就是&lt;strong&gt;侵入性&lt;/strong&gt;，技术组件向上暴露的 &lt;code&gt;API&lt;/code&gt; 应该是抽象简洁的，对于调用者来说无需关心其实现细节。无论是业务逻辑还是技术细节，控制其复杂度的根本能力是&lt;strong&gt;抽象能力&lt;/strong&gt;，抽象就是寻找事物的共性，并针对这种共性建立通用的解决方案。业务问题往往更为多变，因此共性更加难以寻找，而不同业务面临的技术问题往往是类似的，这也是为什么软件领域内大量的开源框架总是为了解决某一类技术问题，而没有面向业务的万能良药。但是在业务的设计中，依然可以遵循某一种指导思想，例如&lt;strong&gt;领域驱动设计，简称 DDD（Domain Driven Design）&lt;/strong&gt;就是这样一种思想。因此对微服务架构的探讨也应该基于这两个维度，业务逻辑和技术细节。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Spring Cloud" scheme="https://ethanzhang.cn/tags/Spring-Cloud/"/>
+    
+    <category term="Microservices" scheme="https://ethanzhang.cn/tags/Microservices/"/>
+    
+    <category term="DDD" scheme="https://ethanzhang.cn/tags/DDD/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring 事务抽象带来的思考</title>
+    <link href="https://ethanzhang.cn/2020/12/31/spring-shi-wu-chou-xiang-dai-lai-de-si-kao/"/>
+    <id>https://ethanzhang.cn/2020/12/31/spring-shi-wu-chou-xiang-dai-lai-de-si-kao/</id>
+    <published>2020-12-31T11:00:07.000Z</published>
+    <updated>2020-12-31T11:05:10.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;一般来说，在一个复杂系统中，我们会集成很多的 &lt;code&gt;data access frameworks&lt;/code&gt;，也就是所谓的数据持久层框架，例如通过 &lt;code&gt;Hibernate&lt;/code&gt;，&lt;code&gt;MyBatis&lt;/code&gt; 操作 &lt;code&gt;Mysql&lt;/code&gt; 这样的关系型数据库，亦或是通过 &lt;code&gt;Jedis&lt;/code&gt;，&lt;code&gt;Redission&lt;/code&gt; 这样的客户端组件操作 &lt;code&gt;Redis&lt;/code&gt; 等 &lt;code&gt;key-value&lt;/code&gt; 数据库。总而言之，一旦涉及到数据层面的操作，就会引出事务问题。因此我们需要一个统一的事务标准帮我去处理这类问题，事务是一个抽象概念，无论是本地事务，或是分布式事务，从抽象概念上他们是同一类问题，我们需要从更高的角度去看待他们，建立抽象概念将事务问题抽象化，简单化，再针对具体的问题去实现这些抽象概念，这是一种合理的思维方式。而 &lt;code&gt;Spring Framework&lt;/code&gt; 为我们建立了这样的模型，或许可以给我们一些启发。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Framework" scheme="https://ethanzhang.cn/tags/Spring-Framework/"/>
+    
+    <category term="Transaction" scheme="https://ethanzhang.cn/tags/Transaction/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>记一次 Redis 上线事故</title>
+    <link href="https://ethanzhang.cn/2020/12/23/ji-yi-ci-redis-shang-xian-shi-gu/"/>
+    <id>https://ethanzhang.cn/2020/12/23/ji-yi-ci-redis-shang-xian-shi-gu/</id>
+    <published>2020-12-23T02:46:20.000Z</published>
+    <updated>2020-12-23T03:15:38.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;&lt;code&gt;Redis&lt;/code&gt; 作为最被广泛使用的缓存中间件之一，虽然市面上大量开源的 &lt;code&gt;Redis&lt;/code&gt; 开源客户端提供的 &lt;code&gt;API&lt;/code&gt; 是非常简洁的，但如果我们需要将它用得游刃有余，使其真正高效地服务于我们的应用服务，那么我们就需要深入理解 &lt;code&gt;Redis&lt;/code&gt; 的存储结构和运行机制。最近在公司项目上线过程中遇到了一次 &lt;code&gt;Redis&lt;/code&gt; 相关的上线事故，故记录下来，作为一种经验的总结，同时也希望加深自己对于 &lt;code&gt;Redis&lt;/code&gt; 的理解和思考。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Cache" scheme="https://ethanzhang.cn/tags/Spring-Cache/"/>
+    
+    <category term="Redis" scheme="https://ethanzhang.cn/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring Security（二）权限管理</title>
+    <link href="https://ethanzhang.cn/2020/12/05/spring-security-er-quan-xian-guan-li/"/>
+    <id>https://ethanzhang.cn/2020/12/05/spring-security-er-quan-xian-guan-li/</id>
+    <published>2020-12-05T08:51:18.000Z</published>
+    <updated>2020-12-09T09:50:58.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;在另一篇文章 &lt;a href=&quot;https://ethanzhang.cn/spring-security-yi-shen-fen-ren-zheng.html&quot;&gt;Spring Security（一）身份认证&lt;/a&gt; 中我们讲到了 &lt;code&gt;Spring Security&lt;/code&gt; 的 &lt;code&gt;Authentication&lt;/code&gt; 身份认证过程，当一个用户的身份被系统识别，我们会给这个用户赋予一定的权限，这些权限决定用户能够访问系统中的哪些资源，&lt;code&gt;Spring Security&lt;/code&gt; 中的 &lt;code&gt;Authorization&lt;/code&gt; 为我们提供了系统权限管理的基本模型。&lt;code&gt;Spring Security&lt;/code&gt; 基于 &lt;code&gt;AOP&lt;/code&gt; 切面编程的思想提供了方法级别的拦截，同时利用注解驱动大幅简化开发者在权限校验层面的逻辑判断。当然 &lt;code&gt;Spring Security&lt;/code&gt; 默认的权限管理方式未必能够满足我们的需求，但是它为我们提供了灵活的扩展方式，我们可以方便地将自己的实现嵌入到 &lt;code&gt;Spring Security&lt;/code&gt; 的校验流程中。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Security" scheme="https://ethanzhang.cn/tags/Spring-Security/"/>
+    
+    <category term="CORS" scheme="https://ethanzhang.cn/tags/CORS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring Security（一）身份认证</title>
+    <link href="https://ethanzhang.cn/2020/11/27/spring-security-yi-shen-fen-ren-zheng/"/>
+    <id>https://ethanzhang.cn/2020/11/27/spring-security-yi-shen-fen-ren-zheng/</id>
+    <published>2020-11-27T07:35:22.000Z</published>
+    <updated>2021-03-31T11:57:08.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;随着互联网技术的蓬勃发展，正所谓道高一尺，魔高一丈，黑客技术也得到了迅猛的发展。黑客们利用各大网站的安全漏洞实施着各种出人意料的攻击，例如常见的 &lt;code&gt;XSS&lt;/code&gt; 跨站脚本攻击，&lt;code&gt;CSRF&lt;/code&gt; 跨站请求伪造等方式。众所周知，数据是互联网公司最重要的核心资产之一，一旦被黑客窃取，会给公司带来难以估量的损失。因此 &lt;code&gt;WEB&lt;/code&gt; 安全方面的技术愈发收到各大互联网公司的重视，&lt;code&gt;WEB&lt;/code&gt; 安全从最根本的角度来讲是对用户身份的识别，从 &lt;code&gt;WEB&lt;/code&gt; 后端的角度来看需要确保每一次前端发起的请求都是安全的，用户所访问的数据不应该超过该用户的权限边界。因此用户身份认证，权限校验几乎是每一个系统需要深刻思考的问题，本文会以 &lt;code&gt;Spring Security&lt;/code&gt; 框架为例，看看 &lt;code&gt;Spring&lt;/code&gt; 是如何思考这个问题的？以及能带给我们什么启发？&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Security" scheme="https://ethanzhang.cn/tags/Spring-Security/"/>
+    
+    <category term="Spring Session" scheme="https://ethanzhang.cn/tags/Spring-Session/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>浅尝系统消息预警</title>
+    <link href="https://ethanzhang.cn/2020/11/21/qian-chang-xi-tong-xiao-xi-yu-jing/"/>
+    <id>https://ethanzhang.cn/2020/11/21/qian-chang-xi-tong-xiao-xi-yu-jing/</id>
+    <published>2020-11-21T07:21:58.000Z</published>
+    <updated>2020-12-09T09:49:50.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;在现实的系统运行过程中，问题的产生几乎是不可避免的。因为我们要考虑的是在产生问题时如何将损失降到最低，如果快速发现，定位并解决问题。在这个过程中可以说时间是最重要的成本，所以我们期望系统能够具备自动预警的功能，将问题及时暴露给开发人员，如果等待用户反馈，那么此时这个问题往往已经给公司带来了实质性的损失，至少给用户留下了不良印象。在本人的工作实践中，主要通过钉钉机器人实现预警机制，依赖于钉钉的 &lt;code&gt;API&lt;/code&gt; 将系统异常消息发送至内部钉钉群，以便开发人员及时反馈处理。当然钉钉本身只是作为一种消息发送的实现，在实际的应用场景中可以是短信通知，邮件通知等形式，本文主要从抽象层面上探讨并分享系统预警机制的思想和实现。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Redis" scheme="https://ethanzhang.cn/tags/Redis/"/>
+    
+    <category term="BlockingQueue" scheme="https://ethanzhang.cn/tags/BlockingQueue/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring Cache 缓存抽象</title>
+    <link href="https://ethanzhang.cn/2020/11/17/spring-cache-huan-cun-chou-xiang/"/>
+    <id>https://ethanzhang.cn/2020/11/17/spring-cache-huan-cun-chou-xiang/</id>
+    <published>2020-11-17T10:02:03.000Z</published>
+    <updated>2020-12-09T09:47:08.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;要构建一个高性能高吞吐量的系统，缓存是我们必须考虑的问题。几乎可以这样说，任何一个系统都需要 N 个缓存层来解决数据交互中的 &lt;code&gt;IO&lt;/code&gt; 问题，因为磁盘 &lt;code&gt;IO&lt;/code&gt; 和内存 &lt;code&gt;IO&lt;/code&gt; 在耗时上不是一个数量级的，我们总是更倾向于去读写内存而非磁盘，但内存资源的稀缺性决定了我们无法将所有业务数据加载到缓存中，所以这时候就涉及到了缓存的命中率，淘汰机制等问题，在理想状态下，一个系统的缓存应该以最小的内存代价换取最高的缓存命中率。要达到理想状态需要数据结构及算法方面的支撑，所以我们总会选取一些成熟的方案去实现，例如 &lt;code&gt;Guava Cache&lt;/code&gt;，&lt;code&gt;Caffeine&lt;/code&gt;，&lt;code&gt;EhCache&lt;/code&gt;，&lt;code&gt;Redis&lt;/code&gt; 等框架或中间件都是我们会考虑的选择，但是在我们的系统集成这些缓存框架时，其实我们并不希望强依赖于框架本身，毕竟底层的缓存方案在未来存在切换或升级的可能性，例如 &lt;code&gt;Spring Boot 2.0&lt;/code&gt; 后将 &lt;code&gt;Guava Cache&lt;/code&gt; 升级为 &lt;code&gt;Caffeine&lt;/code&gt;，如果我们的业务代码与缓存方案强关联，此时升级成本是高昂的，可谓牵一发而动全身。所以采用一个中间层隔开业务系统与缓存框架的强关联性不失为一个明智的选择。因此 &lt;code&gt;Spring Cache&lt;/code&gt; 应运而生，官方文档上称之为 &lt;code&gt;Cache Abstraction&lt;/code&gt; 缓存抽象，也就是说 &lt;code&gt;Spring Cache&lt;/code&gt; 并不作为一个缓存方案的实现，而是作为一个抽象层，帮助我们嫁接第三方的缓存方案，并且 &lt;code&gt;Spring Cache&lt;/code&gt; 采用注解驱动的方式极大程度地简化缓存层面的编码。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Cache" scheme="https://ethanzhang.cn/tags/Spring-Cache/"/>
+    
+    <category term="Caffeine" scheme="https://ethanzhang.cn/tags/Caffeine/"/>
+    
+    <category term="Redis" scheme="https://ethanzhang.cn/tags/Redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数据批量处理优化之 Spring Batch</title>
+    <link href="https://ethanzhang.cn/2020/10/28/shu-ju-pi-liang-chu-li-you-hua-zhi-spring-batch/"/>
+    <id>https://ethanzhang.cn/2020/10/28/shu-ju-pi-liang-chu-li-you-hua-zhi-spring-batch/</id>
+    <published>2020-10-28T02:33:40.000Z</published>
+    <updated>2021-03-20T02:58:46.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;在企业级生产场景中数据的批量处理往往是一个具有广泛性的需求，例如用户数据的导入导出，内部数据的迁移，业务数据的统计计算等，这样的数据往往都是较大体量，需要从一种形式转换为另一种形式，或是从一个数据源迁移到另一个目的地。显然这一类问题是具有高度抽象性的，那就意味着我们可以抽象出一些关键组件解决这一类问题，我了解到 &lt;code&gt;Spring Batch&lt;/code&gt; 正是这一类问题的解决方案，与我当时的实现对比，我发现有些设计想法颇为相似，当然 &lt;code&gt;Spring Batch&lt;/code&gt; 在数据处理的容错性、并发性、扩展性、复用性上有更深入的考虑。我发现当时的实现有些重复造轮子的感觉，不过每一次造轮子总能让自己有所收获，同时从 &lt;code&gt;Spring Batch&lt;/code&gt; 的设计中也可以反思自己在实现过程中的缺陷。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Batch" scheme="https://ethanzhang.cn/tags/Spring-Batch/"/>
+    
+    <category term="EasyExcel" scheme="https://ethanzhang.cn/tags/EasyExcel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RocketMQ 与 Spring 生态的融合</title>
+    <link href="https://ethanzhang.cn/2020/10/20/rocketmq-yu-spring-sheng-tai-de-rong-he/"/>
+    <id>https://ethanzhang.cn/2020/10/20/rocketmq-yu-spring-sheng-tai-de-rong-he/</id>
+    <published>2020-10-20T12:35:39.000Z</published>
+    <updated>2020-12-09T09:46:22.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;&lt;code&gt;RocketMQ&lt;/code&gt; 作为阿里开源的一款优秀的消息中间件，已经成为很多互联网公司构建其分布式系统的重要组成部分。同时 &lt;code&gt;RocketMQ&lt;/code&gt; 成为了 &lt;code&gt;Apache&lt;/code&gt; 开源项目，意味着该项目越来越受到开源社区的关注，也意味着更多的人加入到对 &lt;code&gt;RocketMQ&lt;/code&gt; 的使用和完善中，相信将其作为企业消息中间件的技术选型不失为一个明智的选择。对于大部分的 &lt;code&gt;Java&lt;/code&gt; 系统而言， &lt;code&gt;Spring&lt;/code&gt; 已经成为 &lt;code&gt;Java&lt;/code&gt; 开发的既定标准，那么我们必然面临如何在 &lt;code&gt;Spring&lt;/code&gt; 生态中集成 &lt;code&gt;RocketMQ&lt;/code&gt; 客户端，好在官方已经为我们提供了这样的实现，有时候我们也需要在工作中”造轮子”，如何将我们造的”轮子”优雅地集成到 &lt;code&gt;Spring&lt;/code&gt; 生态中，这是我们需要思考的问题，或许我们可以在其中得到一种启发。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Boot" scheme="https://ethanzhang.cn/tags/Spring-Boot/"/>
+    
+    <category term="RocketMQ" scheme="https://ethanzhang.cn/tags/RocketMQ/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring Cloud Circuit Breaker 服务容错</title>
+    <link href="https://ethanzhang.cn/2020/09/26/spring-cloud-circuit-breaker-fu-wu-rong-cuo/"/>
+    <id>https://ethanzhang.cn/2020/09/26/spring-cloud-circuit-breaker-fu-wu-rong-cuo/</id>
+    <published>2020-09-26T07:04:29.000Z</published>
+    <updated>2020-12-09T09:46:46.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;参考 &lt;code&gt;Spring Cloud&lt;/code&gt; 官方文档的描述，&lt;code&gt;Spring Cloud Circuit Breaker&lt;/code&gt; 提供了不同断路器实现的抽象，它为开发者选用不同的断路器实现提供了标准化的 API，在实际的项目应用场景中，我们可以基于 &lt;code&gt;Spring Cloud Circuit Breaker&lt;/code&gt; 采取低耦合的方式将第三方断路器集成到项目中，而不直接强依赖于某一种实现，我们知道，通过制定标准，而不强制实现，是 &lt;code&gt;Spring&lt;/code&gt; 一以贯之的核心编程思想。目前官方提供四种标准实现，分别是 &lt;code&gt;Netfix Hystrix&lt;/code&gt;，&lt;code&gt;Resilience4J&lt;/code&gt;，&lt;code&gt;Sentinel&lt;/code&gt;，以及 &lt;code&gt;Spring Retry&lt;/code&gt;，其中 &lt;code&gt;Netfix Hystrix&lt;/code&gt; 属于 &lt;code&gt;Spring Cloud&lt;/code&gt; 最早支持的一种容错方案，目前已经进入维护模式，此处不再推荐使用，目前官方优先推荐的是 &lt;code&gt;Resilience4J&lt;/code&gt; 方案，它借鉴了 &lt;code&gt;Hystrix&lt;/code&gt; 的设计思想，同时充分应用了 &lt;code&gt;Java8&lt;/code&gt; 函数式编程的 API，由于它只有很少的外部依赖，是一个非常轻量化的容错框架，而且其中很多函数式思想的运用非常值得我们去感悟。另外，&lt;code&gt;Sentinel&lt;/code&gt; 作为阿里微服务开源生态的一部分，&lt;code&gt;Spring Cloud Alibaba&lt;/code&gt; 对其做了较为完善的适配，在某些功能性上相比于其他方案甚至更加健壮，在方案选型时也是非常值得我们去考虑的。&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Cloud" scheme="https://ethanzhang.cn/tags/Spring-Cloud/"/>
+    
+    <category term="Resilience4j" scheme="https://ethanzhang.cn/tags/Resilience4j/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>观 Spring Cloud OpenFeign 设计有感</title>
+    <link href="https://ethanzhang.cn/2020/09/15/guan-spring-cloud-openfeign-she-ji-you-gan/"/>
+    <id>https://ethanzhang.cn/2020/09/15/guan-spring-cloud-openfeign-she-ji-you-gan/</id>
+    <published>2020-09-15T01:49:04.000Z</published>
+    <updated>2020-12-09T09:46:02.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;&lt;code&gt;Spring Cloud Feign&lt;/code&gt; 是 &lt;code&gt;Spring&lt;/code&gt; 官方提供的一个轻量级 &lt;code&gt;web&lt;/code&gt; 声明式客户端，它的设计初衷在于使我们更容易地编写 &lt;code&gt;web&lt;/code&gt; 客户端程序，它将一个 &lt;code&gt;web&lt;/code&gt; 请求所需要的信息抽象为基于接口和注解的元信息，使我们从复杂的编码中解放出来，而真实的请求交互过程依赖于 &lt;code&gt;Feign&lt;/code&gt; 底层的代理模式进行处理。同时 &lt;code&gt;Feign&lt;/code&gt; 提供了强大的扩展性，例如我们可以自定义 &lt;code&gt;Contract&lt;/code&gt;，&lt;code&gt;Encoder&lt;/code&gt;，&lt;code&gt;Decoder&lt;/code&gt; 等组件，个性化请求数据的编解码过程，也可以选用不同的 &lt;code&gt;HTTP&lt;/code&gt; 客户端解决方案作为 &lt;code&gt;Feign&lt;/code&gt; 底层的支撑。甚至我们可以将自定义的网络交互协议集成到 &lt;code&gt;Feign&lt;/code&gt; 之中，&lt;code&gt;Feign&lt;/code&gt; 本身更像是一种代理框架，几乎不决定性能表现，它的性能表现取决于底层使用的网络交互技术，偶然看到网上有人将 &lt;code&gt;Feign&lt;/code&gt; 与诸如 &lt;code&gt;Dubbo&lt;/code&gt; 这样的 &lt;code&gt;RPC&lt;/code&gt; 框架进行性能对比，本质上这是两种定位的技术，理论上 &lt;code&gt;Feign&lt;/code&gt; 可以将任何网络交互方案集成进来，两者并不是对立或排斥的。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Cloud" scheme="https://ethanzhang.cn/tags/Spring-Cloud/"/>
+    
+    <category term="Spring Cloud Feign" scheme="https://ethanzhang.cn/tags/Spring-Cloud-Feign/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>锁之浅见</title>
+    <link href="https://ethanzhang.cn/2020/08/17/suo-zhi-qian-jian/"/>
+    <id>https://ethanzhang.cn/2020/08/17/suo-zhi-qian-jian/</id>
+    <published>2020-08-17T07:14:45.000Z</published>
+    <updated>2020-12-09T09:45:06.000Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;strong&gt;在计算机科学中，锁是在执行多线程时用于强行限制资源访问的同步机制，即用于在并发控制中保证对互斥要求的满足。一般的锁是建议锁（advisory lock），每个线程在访问对应资源前都需获取锁的信息，再根据信息决定是否可以访问。若访问对应信息，锁的状态会改变为锁定，因此其他线程此时不会访问该资源，当资源结束后，会恢复锁的状态，允许其他线程的访问。有些系统有强制锁（mandatory lock），若有未授权的线程想要访问锁定的数据，在访问时就会产生异常。&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;以上是维基百科中对于锁的定义，在现代化软件尤其是互联网行业中，系统的吞吐量成为技术衡量的重要指标，因为并发编程的广泛使用几乎是必然的。当我们享受着并发编程带来的更高硬件利用率以及更好用户体验的同时，针对共享资源的访问控制成为一个绕不开的话题。有时候我们甚至需要牺牲一定的并发性来保障数据的一致性和可靠性，一个优秀的系统不是偏执的，而是在多种因素之间取得一种完美的平衡，如何优雅地给程序加锁需要我们去探索和思考。&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Redis" scheme="https://ethanzhang.cn/tags/Redis/"/>
+    
+    <category term="Lock" scheme="https://ethanzhang.cn/tags/Lock/"/>
+    
+    <category term="AQS" scheme="https://ethanzhang.cn/tags/AQS/"/>
+    
+    <category term="Zookeeper" scheme="https://ethanzhang.cn/tags/Zookeeper/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>响应式编程之浅见</title>
+    <link href="https://ethanzhang.cn/2020/06/28/xiang-ying-shi-bian-cheng-zhi-qian-jian/"/>
+    <id>https://ethanzhang.cn/2020/06/28/xiang-ying-shi-bian-cheng-zhi-qian-jian/</id>
+    <published>2020-06-28T02:35:47.000Z</published>
+    <updated>2021-03-02T12:15:14.000Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;strong&gt;在计算中，响应式编程或反应式编程（英语：Reactive programming）是一种面向数据流和变化传播的声明式编程范式。这意味着可以在编程语言中很方便地表达静态或动态的数据流，而相关的计算模型会自动将变化的值通过数据流进行传播。&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;以上是维基百科中对于响应式编程的定义，这段文字很简短同时也很抽象，乍一看或许并不是那么好理解。其实响应式编程对于我们并不是一个陌生的概念，响应式编程的设计理念充斥了软件系统的各个角落。例如我们在设计模式中常提到的观察者模式（Observer Pattern），将多个Observer注册到Observable上，对于Observable的数据变化做出实时反映，这是面向对象设计模式中响应式思想的体现。Java8中的Stream流，CompletableFuture，函数式风格API，一直到Java9引入的Flow API，让我们看到JDK的设计者们对于Java未来的想象，我们可以发现Java语言的发展逐渐趋向于追随函数式和响应式的编程范式。同时RxJava，Project Reactor等第三方库的支持，为构建响应式风格的系统提供了良好的基础建设。尤其是Spring家族作为Java生态的引领者，在Spring Framework 5.0版本开始全面使用Reactive API实现一些功能组件，似乎Spring官方对于响应式风格的推广有强烈信心，那么响应式编程到底能给我们带来什么呢？&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Reactive Programing" scheme="https://ethanzhang.cn/tags/Reactive-Programing/"/>
+    
+    <category term="Project Reactor" scheme="https://ethanzhang.cn/tags/Project-Reactor/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nacos 如何适应 Spring Cloud 规范</title>
+    <link href="https://ethanzhang.cn/2020/06/20/nacos-ru-he-gua-ying-spring-cloud-gui-fan/"/>
+    <id>https://ethanzhang.cn/2020/06/20/nacos-ru-he-gua-ying-spring-cloud-gui-fan/</id>
+    <published>2020-06-20T05:50:16.000Z</published>
+    <updated>2020-12-09T09:45:36.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;我们知道在 Java 微服务生态体系的发展过程中，有两种主流的解决方案逐渐受到行业内的关注，一种是基于 Spring 技术体系，由 Spring 官方团队推出的 Spring Cloud 微服务一体式解决方案可以为我们方便地搭建一个微服务架构，而且基于 Spring 良好的粘合剂的特性我们可以方便地将各类第三方框架集成到该体系中。另一个方面，由阿里所推出的 Dubbo 从早期单纯的一个 RPC 框架自从阿里宣布重新启动对 Dubbo 的维护后，逐渐自成一派，融合了如 Nacos, Sentinel, Seata, RocketMQ 一类的中间件技术，成为全新一套完整的微服务解决方案，为企业构建自身的架构提供了不同的选择。很多时候我们在面临选择拥抱哪一种生态的时候，往往会权衡利弊，有所犹豫，直到 Spring Cloud Alibaba 的推出，这一切又变得迥然不同。面对 Spring Cloud 体系的蓬勃发展并受到大众的广泛接受，Dubbo 体系选择拥抱 Spring Cloud，基于 Spring 体系强大的包容性和扩展性推出了适用 Spring Cloud 规范而生的 Spring Cloud Alibaba，如今在 Spring 官网我们已经看到 Spring Cloud Alibaba 的英文文档，意味着这种方案已经被 Spring 官方所认可和推崇。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Cloud" scheme="https://ethanzhang.cn/tags/Spring-Cloud/"/>
+    
+    <category term="Nacos" scheme="https://ethanzhang.cn/tags/Nacos/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>微服务网关 Spring Cloud Gateway 之限流</title>
+    <link href="https://ethanzhang.cn/2020/04/08/wei-fu-wu-wang-guan-spring-cloud-gateway-zhi-xian-liu/"/>
+    <id>https://ethanzhang.cn/2020/04/08/wei-fu-wu-wang-guan-spring-cloud-gateway-zhi-xian-liu/</id>
+    <published>2020-04-08T02:20:36.000Z</published>
+    <updated>2020-12-09T09:44:30.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Spring Cloud Gateway 作为 Spring 官方全新推出的微服务网关解决方案，用于替代原有的 Netflix Zuul 框架，相比于 Zuul，Spring Cloud Gateway 最大的不同点在于它是基于 Spring Boot 2.x 版本进行开发，我们知道  Spring 从 Spring Boot 2.0 以上（也就是 Spring Framework 5.0 以上）的版本引入了全新的 Java Web 框架Spring Webflux，基于 Project Reactor 进行开发，与基于 Servlet API 的 Spring MVC 不同，由于它依赖于Reactor 响应式编程框架，基于 Spring Webflux 构建的服务是非阻塞式的，支持所谓的 back pressure（背压），尽管目前业内对 Spring Webflux 的使用普及程度似乎还不高，但从 Spring 官方对该框架的推崇程度来看，我们有理由相信选择 Spring Cloud Gateway 构建我们的网关服务不失为一个长远的选择。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Cloud Gateway" scheme="https://ethanzhang.cn/tags/Spring-Cloud-Gateway/"/>
+    
+    <category term="Flow Control" scheme="https://ethanzhang.cn/tags/Flow-Control/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数据批量处理优化</title>
+    <link href="https://ethanzhang.cn/2019/09/29/shu-ju-pi-liang-chu-li-you-hua/"/>
+    <id>https://ethanzhang.cn/2019/09/29/shu-ju-pi-liang-chu-li-you-hua/</id>
+    <published>2019-09-29T00:49:04.000Z</published>
+    <updated>2021-03-20T02:57:28.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;整体概要设计&quot;&gt;&lt;a href=&quot;#整体概要设计&quot; class=&quot;headerlink&quot; title=&quot;整体概要设计&quot;&gt;&lt;/a&gt;整体概要设计&lt;/h2&gt;&lt;hr&gt;
+&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="多线程" scheme="https://ethanzhang.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    <category term="并发" scheme="https://ethanzhang.cn/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+    <category term="重构" scheme="https://ethanzhang.cn/tags/%E9%87%8D%E6%9E%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>事件驱动之 Spring Cloud Bus</title>
+    <link href="https://ethanzhang.cn/2019/09/25/shi-jian-qu-dong-zhi-spring-cloud-bus/"/>
+    <id>https://ethanzhang.cn/2019/09/25/shi-jian-qu-dong-zhi-spring-cloud-bus/</id>
+    <published>2019-09-25T08:52:23.000Z</published>
+    <updated>2020-12-09T09:43:16.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;在分布式系统中我们往往需要大量的状态广播，以通知系统中各个节点，触发相关行为，例如用于保证分布式数据一致性或进行相关补偿行为。这时候事件驱动型的编程模型有利于我们处理相关问题，在一个节点发布一个事件，另外N个节点监听该事件作出相关反应，这种类似发布-订阅的模型我们往往会考虑利用消息中间件来实现。同样 Spring Cloud Bus 也需要依赖于MQ，我们知道 Spring Cloud Stream 在框架层面为我们抽象了一系列操作消息中间件（目前官方支持 Rabbit MQ，kafka）的API，而 Spring Cloud Bus 基于这些API实现的事件驱动模型几乎可以使我们无感知地在分布式节点之间实现事件监听机制。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Cloud" scheme="https://ethanzhang.cn/tags/Spring-Cloud/"/>
+    
+    <category term="Bus" scheme="https://ethanzhang.cn/tags/Bus/"/>
+    
+    <category term="Event Driven" scheme="https://ethanzhang.cn/tags/Event-Driven/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>源码感悟之 Spring Cloud Ribbon</title>
+    <link href="https://ethanzhang.cn/2019/09/20/yuan-ma-gan-wu-zhi-spring-cloud-ribbon/"/>
+    <id>https://ethanzhang.cn/2019/09/20/yuan-ma-gan-wu-zhi-spring-cloud-ribbon/</id>
+    <published>2019-09-20T06:33:40.000Z</published>
+    <updated>2020-12-09T09:43:22.000Z</updated>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;我们知道，Spring Cloud Ribbon 是 Spring Cloud 技术栈中用于微服务架构中服务间调用实现负载均衡功能的组件。在此实现中，Spring官方采用客户端负载均衡（Client Side Load Balancer）可谓有利有弊，一方面，客户端负载均衡由于相关配置由单个客户端维护，具有稳定性高，相互几乎无影响的优点，提高了负载均衡整体的可用性，同时，在升级相关依赖时，需要对各客户端进行单独升级，无疑提高了系统的维护成本。但无论如何，Spring Cloud Ribbon 对于负载均衡的实现与设计是值得我们感悟和思考的，其中的一些设计思想对我们设计自己的程序时有莫大的启发。&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    
+    <category term="Java" scheme="https://ethanzhang.cn/tags/Java/"/>
+    
+    <category term="Spring Cloud" scheme="https://ethanzhang.cn/tags/Spring-Cloud/"/>
+    
+    <category term="Ribbon" scheme="https://ethanzhang.cn/tags/Ribbon/"/>
+    
+  </entry>
+  
+</feed>

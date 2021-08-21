@@ -1,0 +1,1445 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="浅谈微服务架构设计, Ethan&#39;s Blog">
+    <meta name="description" content="Nothing&#39;s gonna change my world">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>浅谈微服务架构设计 | Ethan&#39;s Blog</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Ethan's Blog" type="application/atom+xml">
+</head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Ethan&#39;s Blog</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Ethan&#39;s Blog</div>
+        <div class="logo-desc">
+            
+            Nothing&#39;s gonna change my world
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/ethan-zhang-github" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/ethan-zhang-github" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/imagesc4738e39-76b6-4417-a43f-b11f3c87dcb6.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">浅谈微服务架构设计</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="container content">
+
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Spring-Cloud/">
+                                <span class="chip bg-color">Spring Cloud</span>
+                            </a>
+                        
+                            <a href="/tags/Microservices/">
+                                <span class="chip bg-color">Microservices</span>
+                            </a>
+                        
+                            <a href="/tags/DDD/">
+                                <span class="chip bg-color">DDD</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-03-02
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    6.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    25 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <blockquote>
+<p><em>“架构”一个抽象而看似高端的词汇，我们难以给它一个明确的定义。人们发明了很多描述架构的概念，单体架构、SOA架构、六边形架构、洋葱圈架构、微服务架构等。这些不同概念的定义和思想相互渗透影响，没有清晰的边界。在实践中一个系统往往是参考多种思想形成的综合性产物，因此我们很难判定一个系统究竟属于哪一种架构风格。<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/27343287/answer/1184500866">熵增理论为什么让好多人一下子就领悟了？</a> 无意中看到这样一篇文章，似乎能给我们一些启发，软件架构的存在是为了保持系统要素之间的有序性，无论是软件系统还是现实世界广义上的系统，在没有外力介入的情况下，其熵增是不可避免的，万物总是从有序变得无序。一个房间，只要我们不去整理，随着时间的推移，它迟早会变得杂乱无章，而且这个过程发生得简单而自然，因为它符合熵增规律。而架构的本质是要描述一种规则，这种规则限定了在一个房间内，什么东西该放在哪里，当然即使有规则的存在，房间依然会变乱，但是我们会发现房间变乱的速度变慢了。因此我们可以这么说，<strong>架构可以有效地降低系统熵增的速度</strong>。我们知道将一个杂乱的房间打扫干净需要耗费巨大的心力，因为逆熵增规律而动总是艰难的。在软件世界中，<strong>重构</strong>这种行为的本质是使用外力作用于孤立系统，使之完成熵减过程。虽然重构的代价很大，但确是不可避免的，例如在一个系统不同的发展阶段，适合它的架构风格是不同的，将一个系统从单体架构演化为微服务架构必然意味着重构。当然很多情况下重构是对前期错误设计付出的代价，一个早期的微小的错误设计很可能引发蝴蝶效应，造成系统后期巨大的缺陷，当系统设计者意识到这个缺陷已经导致系统无法维护时，重构就被提上了议程，良好的架构设计就是为了减少这种不必要代价的产生。<a target="_blank" rel="noopener" href="https://blog.csdn.net/significantfrank/article/details/110934799">COLA 4.0：应用架构的最佳实践</a> 这篇博客中作者对于架构的思考可以给我们一些启发，一个良好的架构必须要达到的目的是<strong>关注点分离</strong>，所谓的分离指的是<strong>业务复杂度</strong>和<strong>技术复杂度</strong>的分离，例如在开发创建订单的业务时，不应该考虑分布式锁是基于 <code>Redis</code> 还是 <code>Zookeeper</code> 来实现，这是两个维度的问题，技术复杂度始终不应该侵入业务复杂度，评价一个技术框架实现是否优秀的重要指标就是<strong>侵入性</strong>，技术组件向上暴露的 <code>API</code> 应该是抽象简洁的，对于调用者来说无需关心其实现细节。无论是业务逻辑还是技术细节，控制其复杂度的根本能力是<strong>抽象能力</strong>，抽象就是寻找事物的共性，并针对这种共性建立通用的解决方案。业务问题往往更为多变，因此共性更加难以寻找，而不同业务面临的技术问题往往是类似的，这也是为什么软件领域内大量的开源框架总是为了解决某一类技术问题，而没有面向业务的万能良药。但是在业务的设计中，依然可以遵循某一种指导思想，例如<strong>领域驱动设计，简称 DDD（Domain Driven Design）</strong>就是这样一种思想。因此对微服务架构的探讨也应该基于这两个维度，业务逻辑和技术细节。</em></p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="从业务设计层面来谈"><a href="#从业务设计层面来谈" class="headerlink" title="从业务设计层面来谈"></a>从业务设计层面来谈</h2><hr>
+<p>要设计良好的微服务架构，根本在于业务逻辑的划分。因为在技术层面上，大量的开源组织和云服务厂商已经提供了较为成熟的解决方案，虽然将这些技术方案整合起来也需要对微服务技术体系有一定程度的认知，但整体来讲由于技术细节本身具有良好的抽象性，容易在行业内达成一致共识，所以构建微服务技术层面的基础设施反而不是风险最大的。而业务的划分则是仁者见仁，智者见智，难以形成统一的标准。但是无论业务本身有多大的差异性，在设计过程中我们依然要遵循一些基本原则，也可以利用一些设计思想尽可能降低业务复杂度。</p>
+<h3 id="怎么理解-“微”"><a href="#怎么理解-“微”" class="headerlink" title="怎么理解 “微”"></a>怎么理解 “微”</h3><p>微服务中的 “微” 告诉我们服务的粒度应该尽可能小，这有利于服务功能具备高度的复用性。那么所谓的服务大小是基于什么维度去判断呢？是代码量还是服务所需的硬件资源？事实上，微服务划分最重要的依据就是业务职责的独立性和单一性，我们知道设计模式中有一个原则是单一责任原则，<strong>软件系统的一切设计都是为了达到高内聚，低耦合</strong>。一个服务承担某一类业务模块的功能，意味着该模块的逻辑可以内聚在服务内部，具有独立的数据库和数据结构，甚至可以采用不同的持久化方案，对外只需提供尽可能简洁的 <code>API</code>，避免复杂度外露。追求服务粒度小并不意味着业务请求的调用链会被拉得很长，如果业务边界划分得当，服务间交互应该不是那么频繁的，而且在微服务架构中，应该尽可能使用异步或响应式的编程模型，避免服务消费者强依赖于服务提供者。</p>
+<h3 id="基于-DDD（领域驱动设计）的分层架构"><a href="#基于-DDD（领域驱动设计）的分层架构" class="headerlink" title="基于 DDD（领域驱动设计）的分层架构"></a>基于 DDD（领域驱动设计）的分层架构</h3><p>DDD 告诉我们一个系统应该划分为展现层，应用层，领域层以及基础设施层，业务复杂度集中于领域层，而技术复杂度集中于基础设施层，实现关注点分离。</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/images%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84.png" alt="分层架构"></p>
+<ul>
+<li><p>展现层：又被称为 User Interface 用户接口层，在前后端分离的架构下该层一般由前端或移动端实现，通过调用应用层 API 获取 VO（View Object）并将业务数据以某种形式展现给用户或另一个计算机系统。</p>
+</li>
+<li><p>应用层：需要从粗粒度上定义业务 API，但应用层本身应该是很薄的一层，尽量不承担业务逻辑，不包含业务规则及业务知识，仅仅作为业务任务的编排器，类似 <code>Java</code> 中 <code>CompletableFuture</code> 对异步任务的编排，协调多个领域聚合共同完成一项业务任务。对于系统中的查询类操作，应用层相当于一个 API 组合器，往往需要聚合多个领域模型中的数据交付给展现层，此时针对领域层的多个查询操作大部分是可以并行的，因此在应用层中非常适合实践异步或响应式编程模型。一般来讲应用层的数据对象被定义为 DTO（Data Transfer Object），与展现层通过 VO 交互，与领域层通过 DO（Domain Object）交互，因此往往需要大量的 <code>Converter</code> 类型转换器。</p>
+</li>
+<li><p>领域层：所谓的“领域驱动设计”，领域层是整个系统的核心层，负责表达大部分的业务概念，是业务复杂度的集中地，并且系统的设计应该是从建立领域模型开始的，同时在微服务架构中，领域模型应该作为服务划分的重要依据。</p>
+</li>
+<li><p>基础设施层：作为技术复杂度的集中地，为应用层和领域层提供技术能力，例如持久化方案，缓存机制，消息 API，分布式事务支持等。需要注意的是基础设施层应该遵循依赖导致原则，避免暴露内部的实现细节，对外应该提供抽象的 API，避免业务代码直接依赖于外部技术组件，以免在未来切换技术实现方案时造成巨大的升级成本。</p>
+</li>
+</ul>
+<h3 id="依赖倒置与防腐层"><a href="#依赖倒置与防腐层" class="headerlink" title="依赖倒置与防腐层"></a>依赖倒置与防腐层</h3><p>在谈论设计模式时离不开一个重要的原则<strong>“依赖导致原则（Dependency Inversion）”</strong>，对于一个软件模块或组件而言，无论本身是具体还是抽象，都应该尽可能依赖于抽象，因此当我们需要在两个具体模块之间建立依赖关系时，应该建立一个抽象层将依赖关系隔开，在微服务架构中也把这种抽象层称为防腐层。</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/images%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E5%8F%91%E7%8E%B0.png" alt="服务注册发现"></p>
+<p>为什么在 <code>Java</code> 开发过程中需要 <code>Spring</code> 的 <code>BeanFactory</code> 这样的 <code>IOC</code> 容器？为什么在微服务架构中需要服务注册中心？因为无论是 <code>Java Bean</code> 之间的强依赖，还是 <code>microservices</code> 之间的强依赖，最终的结果是大幅增加系统的复杂度，造成熵增。因此我们需要一个中心化的容器，维护服务提供者的信息，并向服务消费者提供这样的信息，避免两者直接交互。从 <code>Java Bean</code> 的角度来看，<code>BeanFactory</code> 就是这样的容器，从微服务的角度来看，服务注册中心就是这样的容器。</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/images%E6%8A%BD%E8%B1%A1%E5%B1%82.png" alt="抽象层"> </p>
+<p>我们在前文说到优秀架构的目标是关注点分离，从基于 DDD 的分层架构来看，技术复杂度被集中于基础设施层，那就意味着基础设施层必然需要依然大量的第三方依赖，技术中间件等。但是这些技术细节不应该暴露到业务层面上，例如系统原本依赖于 <code>RabbitMQ</code> 实现分布式消息机制，未来由于某种原因需要切换为 <code>RocketMQ</code> 实现，此时如果业务代码直接依赖于 <code>RabbitMQ</code> 的消息 <code>API</code>，那么牵一发而动全身，切换工作量是较大的。因此较好的实现策略是在业务代码与技术实现之间建立抽象层，从设计模式的角度来讲比较符合 <code>Adapter Pattern（适配器模式）</code> 和 <code>Facade Pattern（门面模式）</code> 的思想。适配器模式用于适配不同的技术方案，门面模式用于向上层暴露抽象 <code>API</code>。所谓的“防腐层”就是防止外部依赖逐渐腐化系统内部的代码，因为外部依赖随着版本的升级，其代码改动是不可控的，需要抽象层与之解耦。</p>
+<h3 id="事件驱动-业务解耦的利器"><a href="#事件驱动-业务解耦的利器" class="headerlink" title="事件驱动 - 业务解耦的利器"></a>事件驱动 - 业务解耦的利器</h3><p>分布式 BASE 理论认为要构建一个具备弹性的分布式系统，需要具备三个要素：</p>
+<ul>
+<li><p>Basically Available（基本可用）</p>
+</li>
+<li><p>Soft-state（软状态）</p>
+</li>
+<li><p>Eventually Consistent（最终一致性）</p>
+</li>
+</ul>
+<p>由于分布式系统中网络环境的复杂性，我们无法利用单体服务基于关系型数据库 ACID 事务的特性达成数据强一致性。而如果使用分布式事务的方案追求数据的强一致性，那么意味着系统中所有的调用都必须是同步的，想象一下如果在一个长调用链中，任何一个服务的崩溃都会导致该业务流程不可用，此时系统的可用性肯定是不高的，因此我们需要在系统的可用性和一致性之间取得一种平衡。BASE 理论建议我们追求数据的最终一致性，所以我们需要在服务间建立一种异步通信机制，事件驱动就是这样一种思想。</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/images%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8.png"></p>
+<p>在系统中充满了这样的场景，当行为 A 发生时需要触发行为 B，此时如果行为 A 必须关注行为 B 执行的结果，那么我们不得不采取同步的方式在行为 A 的代码中调用行为 B，如果两者位于不同的服务中，那么我们会采用 RPC 调用的方式，此时的代码具有侵入性，行为 B 的代码侵入了行为 A，意味着修改 B 模块就必然影响 A 模块。而事实上系统的大部分行为在执行时无需相互关注执行结果，我们应该尽可能采用异步编程的模型去实现。在行为 A 执行完成后，我们可以发布一个特定的 <code>Event</code> 事件，B 模块注册为该事件的监听器，监听到事件发生后，触发行为 B 即可。随着系统业务的发展，会有新的模块需要关注该事件，只需注册新的监听器即可，这些行为对于模块 A 以及模块 B 都是不可见的，就达到了关注点分离的目的。事件监听机制是观察者模式的一种延伸，多个 <code>Observer</code> 观察者关注同个主题，观察者之间是不可见的。</p>
+<h2 id="从技术细节层面来谈"><a href="#从技术细节层面来谈" class="headerlink" title="从技术细节层面来谈"></a>从技术细节层面来谈</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/1VB2K_lHG4yRc8pu9_qgOw">十年再出发，Dubbo 3.0 Preview 即将在 3 月发布</a> 随着 <code>Dubbo</code> 新版本的发布，阿里官方在这篇文章中探讨了 <code>Dubbo</code> 与 <code>Spring Cloud</code> 和 <code>gRPC</code> 之间的关系。在几年之前，当一家企业决定实践微服务架构时，时常会面临技术选型的困惑，是应该选择以 <code>Dubbo</code> 为核心阿里开源的一系列技术组件作为方案还是应该拥抱 <code>Spring Cloud</code>体系？事实上站在今天的角度来看，这个问题已经没有多大意义，因为这两者不是互斥的，完全可以组合使用。<code>Dubbo</code> 已经成为 <code>Spring Cloud Alibaba</code> 中的 <code>RPC</code> 调用实现方案，而 <code>Spring Cloud Alibaba</code> 本身由作为 <code>Spring Cloud</code> 抽象标准的一种实现。<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/V6K6Ehq8xdRwnMbKJWG7_g">Spring Cloud 2020.0.0 正式发布，对开发者来说意味着什么？</a> 随着近些年 <code>Spring Cloud</code> 体系的快速发展，<code>Spring Cloud</code> 已经成为 <code>Java</code> 领域内微服务框架的既定标准，<code>Spring</code> 官方团队结合大量业界经验逐渐抽象出一套微服务通用架构模式标准。<code>Spring</code> 的主要目的在于建立标准，达成共识，而各类开源或商业组织会建立自己的设配方案，作为 <code>Spring Cloud</code> 的标准的一种实现。开发者完全可以根据需求灵活组合，选取最符合应用场景的实现方案。</p>
+<h3 id="Spring-Cloud-如何建立抽象"><a href="#Spring-Cloud-如何建立抽象" class="headerlink" title="Spring Cloud 如何建立抽象"></a>Spring Cloud 如何建立抽象</h3><p>我们知道早期的 <code>Spring Cloud</code> 框架一直把 <code>Netflix</code> 套件作为默认实现，两者几乎可以划上等号，<code>Eureka</code>、<code>Ribbon</code>、<code>Hystrix</code>、<code>Zuul</code> 这些 <code>Netflix</code> 的开源组件共用组成了早期的 <code>Spring Cloud</code> 框架。而在 <code>Spring</code> 的规划中，<code>Netflix</code> 套件是要被逐渐废弃的，因为 <code>Spring</code> 需要建立更高级别的抽象来制定业界规范，终于在官方最新发布的 <code>Spring Cloud 2020</code> 版本中，除了 <code>Eureka</code> 服务注册中心以外，其余的 <code>Netflix</code> 组件依赖已经被移除，同时官方提供了替代方案。</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/images%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20210227194706.png"></p>
+<p>根据 <code>Spring Cloud</code> 描绘的微服务架构图我们可以知道一个由微服务组成的系统总要解决几类技术问题，事实上在 <code>Spring Cloud Commons</code> 模块中已经抽象出了这些概念：</p>
+<ul>
+<li><p>Service registration and discovery（服务注册与发现）</p>
+</li>
+<li><p>Distributed/versioned configuration（分布式并基于版本的外部化配置）</p>
+</li>
+<li><p>Routing（网关路由）</p>
+</li>
+<li><p>Service-to-service calls（服务间 RPC 调用）</p>
+</li>
+<li><p>Load balancing（负载均衡）</p>
+</li>
+<li><p>Circuit Breakers（服务熔断与降级）</p>
+</li>
+<li><p>Global locks（全局分布式锁）</p>
+</li>
+<li><p>Leadership election and cluster state（主节点选举算法以及分布式状态同步）</p>
+</li>
+<li><p>Distributed messaging（分布式消息）</p>
+</li>
+</ul>
+<h3 id="服务注册与发现"><a href="#服务注册与发现" class="headerlink" title="服务注册与发现"></a>服务注册与发现</h3><p>我们可以看下 <code>Spring</code> 官方对于 <code>Service discovery</code> 的描述：</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/images%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20210228112651.png" alt="service-discovery"></p>
+<p>在微服务架构中，服务消费者（Consumer）不能总是知道服务提供者（Provider）的位置（主要指 IP 和端口号），因此我们需要一些中间件来帮助我们维护服务提供者的位置列表，并且基于服务弹性伸缩的需求，这个列表需要根据情况的变化动态更新。这样的中间件有很多，例如 <code>Eureka</code>、<code>Consul</code>、<code>Zookeeper</code>、<code>Nacos</code> 等，而我们在前文提到过业务程序本身不应该直接依赖于技术中间件，因此在 <code>Spring Cloud Commons</code> 模块中为我们提供了一个抽象接口 <code>DiscovertClient</code> 用以描述该服务具有服务发现的能力，并且我们可以集成 <code>Spring Cloud Load Balancer</code> 模块是服务发现客户端具备客户端负载均衡的能力，从服务提供者列表中选取最恰当的服务实例。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">DiscoveryClient</span> <span class="token keyword">extends</span> <span class="token class-name">Ordered</span> <span class="token punctuation">&#123;</span>
+
+	<span class="token keyword">int</span> DEFAULT_ORDER <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+	<span class="token class-name">String</span> <span class="token function">description</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">ServiceInstance</span><span class="token punctuation">></span></span> <span class="token function">getInstances</span><span class="token punctuation">(</span><span class="token class-name">String</span> serviceId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> <span class="token function">getServices</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token annotation punctuation">@Override</span>
+	<span class="token keyword">default</span> <span class="token keyword">int</span> <span class="token function">getOrder</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> DEFAULT_ORDER<span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>DiscoveryClient</code> 是对于服务发现客户端的抽象，通过它我们可以 <code>getServices</code> 获取所有 <code>Provider</code> 列表，同时根据某个 <code>Provider</code> 的 <code>serivceId</code> 获取其实例列表。任何一个服务想要获得服务发现的能力，都应该在其 <code>Spring</code> 容器中注册 <code>DiscoveryClient</code> 的实例，当然其具体实现取决于我们的技术选型。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">ServiceRegistry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">R</span> <span class="token keyword">extends</span> <span class="token class-name">Registration</span><span class="token punctuation">></span></span> <span class="token punctuation">&#123;</span>
+
+	<span class="token keyword">void</span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token class-name">R</span> registration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">void</span> <span class="token function">deregister</span><span class="token punctuation">(</span><span class="token class-name">R</span> registration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">void</span> <span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">void</span> <span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token class-name">R</span> registration<span class="token punctuation">,</span> <span class="token class-name">String</span> status<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token class-name">T</span> <span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token class-name">R</span> registration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>服务发现的前提是服务注册，系统中的服务提供者都应该是一个服务注册客户端，而 <code>ServiceRegistry</code> 就是对这一种能力的抽象，<code>Registration</code> 是对注册信息的抽象描述。一般来讲微服务架构中的大部分服务即是服务消费者，同时也是服务提供者，所以大部分情况下一个服务应该同时实现 <code>DiscoveryClient</code> 和 <code>ServiceRegistry</code>，同时具备服务发现和服务注册的能力。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">AbstractAutoServiceRegistration</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">R</span> <span class="token keyword">extends</span> <span class="token class-name">Registration</span><span class="token punctuation">></span></span>
+		<span class="token keyword">implements</span> <span class="token class-name">AutoServiceRegistration</span><span class="token punctuation">,</span> <span class="token class-name">ApplicationContextAware</span><span class="token punctuation">,</span> <span class="token class-name">ApplicationListener</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">WebServerInitializedEvent</span><span class="token punctuation">></span></span> <span class="token punctuation">&#123;</span>
+
+	<span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">ServiceRegistry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">R</span><span class="token punctuation">></span></span> serviceRegistry<span class="token punctuation">;</span>
+
+	<span class="token keyword">private</span> <span class="token class-name">AtomicInteger</span> port <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AtomicInteger</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">private</span> <span class="token class-name">AtomicBoolean</span> running <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AtomicBoolean</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">private</span> <span class="token class-name">ApplicationContext</span> context<span class="token punctuation">;</span>
+
+	<span class="token annotation punctuation">@Override</span>
+	<span class="token annotation punctuation">@SuppressWarnings</span><span class="token punctuation">(</span><span class="token string">"deprecation"</span><span class="token punctuation">)</span>
+	<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onApplicationEvent</span><span class="token punctuation">(</span><span class="token class-name">WebServerInitializedEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token function">bind</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+
+	<span class="token annotation punctuation">@Deprecated</span>
+	<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">bind</span><span class="token punctuation">(</span><span class="token class-name">WebServerInitializedEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token class-name">ApplicationContext</span> context <span class="token operator">=</span> event<span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>context <span class="token keyword">instanceof</span> <span class="token class-name">ConfigurableWebServerApplicationContext</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+			<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">"management"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ConfigurableWebServerApplicationContext</span><span class="token punctuation">)</span> context<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getServerNamespace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+				<span class="token keyword">return</span><span class="token punctuation">;</span>
+			<span class="token punctuation">&#125;</span>
+		<span class="token punctuation">&#125;</span>
+		<span class="token keyword">this</span><span class="token punctuation">.</span>port<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> event<span class="token punctuation">.</span><span class="token function">getWebServer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getPort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+
+	<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isEnabled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+			<span class="token keyword">if</span> <span class="token punctuation">(</span>logger<span class="token punctuation">.</span><span class="token function">isDebugEnabled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+				logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"Discovery Lifecycle disabled. Not starting"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token punctuation">&#125;</span>
+			<span class="token keyword">return</span><span class="token punctuation">;</span>
+		<span class="token punctuation">&#125;</span>
+
+		<span class="token comment">// only initialize if nonSecurePort is greater than 0 and it isn't already running</span>
+		<span class="token comment">// because of containerPortInitializer below</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>running<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+			<span class="token keyword">this</span><span class="token punctuation">.</span>context<span class="token punctuation">.</span><span class="token function">publishEvent</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">InstancePreRegisteredEvent</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token function">getRegistration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">shouldRegisterManagement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+				<span class="token function">registerManagement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token punctuation">&#125;</span>
+			<span class="token keyword">this</span><span class="token punctuation">.</span>context<span class="token punctuation">.</span><span class="token function">publishEvent</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">InstanceRegisteredEvent</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token function">getConfiguration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token keyword">this</span><span class="token punctuation">.</span>running<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">&#125;</span>
+
+	<span class="token punctuation">&#125;</span>
+
+	<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">registerManagement</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token class-name">R</span> registration <span class="token operator">=</span> <span class="token function">getManagementRegistration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>registration <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+			<span class="token keyword">this</span><span class="token punctuation">.</span>serviceRegistry<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>registration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">&#125;</span>
+	<span class="token punctuation">&#125;</span>
+	
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>前文我们提到过微服务架构应该具备服务自动弹性伸缩的机制，当一个新的服务实例被启动时，服务注册的行为应该是被自动触发。从 <code>AbstractAutoServiceRegistration</code> 我们可以看到 <code>Spring Cloud</code> 已经提供了这样的抽象模板。当 <code>WebServer</code> 启动时，<code>WebServerInitializedEvent</code> 事件被发布，基于 <code>Spring</code> 的事件驱动机制，<code>AbstractAutoServiceRegistration</code> 作为该事件的监听器，<code>bind</code> 方法被调用，触发服务注册的相关逻辑。<code>AtomicBoolean</code> 作为锁确保注册行为只会发生一次，而具体的注册行为由 <code>ServiceRegistry</code> 的实现类决定，<code>Spring Cloud</code> 作为标准的制定者，抽象的定义者，不会强制捆绑某一种实现，具体的实现逻辑取决于我们集成的外部依赖。</p>
+<h3 id="Spring-Cloud-LoadBalancer"><a href="#Spring-Cloud-LoadBalancer" class="headerlink" title="Spring Cloud LoadBalancer"></a>Spring Cloud LoadBalancer</h3><p>作为 <code>Netflix Ribbon</code> 的替代方案，<code>Spring Cloud LoadBalancer</code> 是一个非常新的模块，它一度只是 <code>Spring Cloud</code> 孵化器里的一个小项目，并且一度搁浅。后再经过重启，发展，现行使其伟大使命，正式用于完全替换 <code>Ribbon</code>，成为 <code>Spring Cloud</code> 负载均衡器唯一实现。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">LoadBalancerClient</span> <span class="token keyword">extends</span> <span class="token class-name">ServiceInstanceChooser</span> <span class="token punctuation">&#123;</span>
+
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token class-name">T</span> <span class="token function">execute</span><span class="token punctuation">(</span><span class="token class-name">String</span> serviceId<span class="token punctuation">,</span> <span class="token class-name">LoadBalancerRequest</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> request<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span><span class="token punctuation">;</span>
+
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token class-name">T</span> <span class="token function">execute</span><span class="token punctuation">(</span><span class="token class-name">String</span> serviceId<span class="token punctuation">,</span> <span class="token class-name">ServiceInstance</span> serviceInstance<span class="token punctuation">,</span> <span class="token class-name">LoadBalancerRequest</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> request<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span><span class="token punctuation">;</span>
+
+	<span class="token class-name">URI</span> <span class="token function">reconstructURI</span><span class="token punctuation">(</span><span class="token class-name">ServiceInstance</span> instance<span class="token punctuation">,</span> <span class="token class-name">URI</span> original<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>LoadBalancerClient</code> 是其核心接口，描述了基于正向代理的客户端负载均衡的能力，它是 <code>ServiceInstanceChooser</code> 的扩展，<code>ServiceInstanceChooser</code> 代表服务实例的选择器，显然负载均衡客户端应该具备选择服务实例的能力，因此这个接口层级设计是非常合理的。在目前的版本中 <code>BlockingLoadBalancerClient</code> 是 <code>LoadBalancerClient</code> 的唯一实现。</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/imagesblocking-load-balancer-client.png" alt="负载均衡客户端"></p>
+<p>负载均衡客户端的根本目的是要从某服务提供者的实例列表中选取最恰当的 <code>ServiceInatance</code>完成 <code>RPC</code> 调用，这个过程对于我们在业务层面上使用 <code>RPC</code> 客户端来说应该是无感知的，因此 <code>Spring Cloud</code> 需要提供不同的适配器将 <code>LoadBalancerClient</code> 集成到不同的客户端技术中，例如将 <code>LoadBalancerClient</code> 封装为请求拦截器集成到 <code>RestTemplate</code> 这样的 <code>Rest</code> 客户端中。</p>
+<h3 id="Spring-Cloud-Circuit-Breaker"><a href="#Spring-Cloud-Circuit-Breaker" class="headerlink" title="Spring Cloud Circuit Breaker"></a>Spring Cloud Circuit Breaker</h3><p>在微服务架构中由于服务被拆分为较细的粒度，请求调用链被拉长，系统的整体可用性会被降低。我们需要引入 <code>Circuit Breaker</code> 断路器这样的概念，通过在短时间内牺牲系统一部分非核心功能来保证核心功能的可用性。因为当一个请求在某一环节上发生异常时，异常未必会被及时抛出，在同步的调用的情况下，意味着此时请求线程被阻塞等待结果返回，而线程属于服务端宝贵的资源，这种情况必然导致系统硬件利用率的降低。<code>Circuit Breaker</code> 的作用是在服务满足一定条件（例如响应时间或异常比例达到一定阈值）的情况下，将针对该服务的所有请求熔断，或返回兜底结果，降低该服务的异常对整个系统的影响，直到该服务的性能指标恢复正常后熔断状态解除。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">CircuitBreaker</span> <span class="token punctuation">&#123;</span>
+
+	<span class="token keyword">default</span> <span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token class-name">T</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">Supplier</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> toRun<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token function">run</span><span class="token punctuation">(</span>toRun<span class="token punctuation">,</span> throwable <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+			<span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NoFallbackAvailableException</span><span class="token punctuation">(</span><span class="token string">"No fallback available."</span><span class="token punctuation">,</span> throwable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token class-name">T</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">Supplier</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> toRun<span class="token punctuation">,</span> <span class="token class-name">Function</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Throwable</span><span class="token punctuation">,</span> <span class="token class-name">T</span><span class="token punctuation">></span></span> fallback<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>Spring Cloud Circuit Breaker</code> 针对断路器概念建立了抽象，通过 <code>run</code> 方法可以将某业务请求委托给断路器执行，<code>toRun</code> 参数泛指一切行为请求行为，<code>fallback</code> 代表请求发生异常时的降低操作，我们可以指定一个兜底返回。</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/imagesspring-cloud-circuit-breaker.png" alt="断路器抽象"></p>
+<p><code>Spring Cloud Circuit Breaker</code> 利用抽象工厂模式将断路器的生产过程抽象化，这有利于适配不同的断路器实现，当前 <code>Spring Cloud</code> 支持四种不同的实现方案，分别是 <code>Netfix Hystrix</code>、<code>Resilience4J</code>、<code>Sentinel</code>、<code>Spring Retry</code>，开发者可以根据自身的需求选用。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">&#123;</span>
+
+	<span class="token annotation punctuation">@Resource</span>
+    <span class="token keyword">private</span> <span class="token class-name">CircuitBreakerFactory</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">,</span> <span class="token operator">?</span><span class="token punctuation">></span></span> circuitBreakerFactory<span class="token punctuation">;</span>
+
+	<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"getUserInfo"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">UserInfo</span> <span class="token function">getUserInfo</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">)</span> <span class="token keyword">long</span> id<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> circuitBreakerFactory<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"getUserInfo"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> userClient<span class="token punctuation">.</span><span class="token function">getUserInfo</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">,</span> throwable <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+            log<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"getUserInfo timeout!"</span><span class="token punctuation">,</span> throwable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">UserInfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在实现层面上，我们只需依赖注入 <code>CircuitBreakerFactory</code> 类型的实例即可，无法感知到底层的具体实现，这符合针对技术组件建立防腐层的要求。</p>
+<h3 id="Spring-Cloud-Gateway"><a href="#Spring-Cloud-Gateway" class="headerlink" title="Spring Cloud Gateway"></a>Spring Cloud Gateway</h3><p>前文我们提到 <code>Netflix Zuul</code> 组件已经被 <code>Spring</code> 官方废弃，即使在旧版本中也不再推荐使用。同时 <code>Spring Cloud</code> 推出了全新的替代方案 <code>Spring Cloud Gateway</code>，这是 <code>Spring Cloud</code> 项目中一个非常具有代表性的模块，为什么这么说呢？ 因为 <code>Spring</code> 长期以来都希望推广基于响应式编程模型的技术栈，在 <code>Spring Framework 5.0</code> 之后的版本中引入了 <code>Project Reactor</code> 响应式编程库，提供了完善的响应式编程 API，并且推出了 <code>Spring Webflux</code> 作为 <code>Spring MVC</code> 的替代方案，<code>Spring</code> 认为异步非阻塞式的编程模型会成为未来的主流。在 <code>Spring Cloud 2020</code> 版本这一倾向变得更为明显，<code>Spring Cloud Gateway</code> 正是基于 <code>Reactor</code> 技术栈实现的，这体现了 <code>Spring</code> 强推 <code>Reactive</code> 异步体系的决心。</p>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/imagesgateway-process.png"></p>
+<p><code>Spring Cloud Gateway</code> 的本质是通过一系列的全局过滤器针对系统外部外部请求做统一过滤处理，例如用户身份认证，用户权限校验，限流等操作，避免在业务服务中产生重复代码，破坏服务的单一责任性。我曾经在 <a href="https://ethanzhang.cn/wei-fu-wu-wang-guan-spring-cloud-gateway-zhi-xian-liu.html">微服务网关 Spring Cloud Gateway 之限流</a> 这篇文章中较为详细地论述过 <code>Spring Cloud Gateway</code> 对限流功能的支持，有兴趣可以阅读。</p>
+<h3 id="Spring-Cloud-Stream"><a href="#Spring-Cloud-Stream" class="headerlink" title="Spring Cloud Stream"></a>Spring Cloud Stream</h3><p>在 <code>Spring Cloud</code> 体系中，我个人会把 <code>Spring Cloud Steam</code> 模块放在一个极为重要的位置。因为在微服务架构中，如果我们遵循 BASE 理论，那么构建一个事件驱动风格的异步模型尤为重要。而在服务间实现异步通信的常规实现就是依赖于某一消息中间件，例如 <code>Apache Kafka</code>、<code>RabbitMQ</code>、<code>RocketMQ</code>、<code>Azure Event Hub</code> 等云服务或开源技术。但是我们会发现这些消息中间件的实现细节各不相同，虽然它们大多实现了发布/订阅模型，生产者组，消费者组，事务性消息等概念，但是前文我们提到过，让业务代码直接依赖于消息 API 不是一个良好的选择。我们希望的是在业务层面上将消息结构抽象化，编写业务代码时无需关注诸如消息序列化，消息负载均衡，推/拉模型等技术细节。<code>Spring Cloud Stream</code> 通过建立三种抽象模型为我们提供了这样的可能：</p>
+<ul>
+<li><p>Destination Binders：绑定器，负责集成外部消息中间件。</p>
+</li>
+<li><p>Destination Bindings：绑定协议，作为应用代码和消息中间件之间的媒介，屏蔽消息 API 的复杂度，统一消息生产者消息者客户端代码的风格。</p>
+</li>
+<li><p>Message：抽象消息模型，被消息生产者和消费者所引用，分别与 <code>Binder</code> 交互，<code>Message</code> 作为业务消息的包装，将消息抽象为消息头和消息体，统一消息风格。</p>
+</li>
+</ul>
+<p><img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/imagesspring-cloud-stream.png" alt="Spring Cloud Stream"></p>
+<p>消息生产者示例代码：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">&#123;</span>
+
+	<span class="token annotation punctuation">@Resource</span>
+    <span class="token keyword">private</span> <span class="token class-name">Source</span> source<span class="token punctuation">;</span>
+
+	<span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"addUserInfoAsync"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserInfoAsync</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">UserInfo</span> userInfo<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        source<span class="token punctuation">.</span><span class="token function">output</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token class-name">MessageBuilder</span><span class="token punctuation">.</span><span class="token function">withPayload</span><span class="token punctuation">(</span>userInfo<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setHeader</span><span class="token punctuation">(</span><span class="token class-name">RocketMQHeaders</span><span class="token punctuation">.</span>TAGS<span class="token punctuation">,</span> <span class="token string">"add-user-tag"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+	
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>消息消费者示例代码：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token keyword">implements</span> <span class="token class-name">UserClient</span> <span class="token punctuation">&#123;</span>
+
+	<span class="token annotation punctuation">@StreamListener</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token class-name">Processor</span><span class="token punctuation">.</span>INPUT<span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token class-name">Message</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">UserInfo</span><span class="token punctuation">></span></span> message<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">UserInfo</span> userInfo <span class="token operator">=</span> message<span class="token punctuation">.</span><span class="token function">getPayload</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"consume message &#123;&#125;"</span><span class="token punctuation">,</span> JSON<span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>userInfo<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">addUserInfo</span><span class="token punctuation">(</span>userInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>Spring Cloud Stream</code> 通过在消息中间件和应用服务之间建立抽象层，使系统具备更高的扩展性，对于消息生产者来说，只需关注消息的目的地，对于消息消费者来说，只需关注消息的来源，而无需关注底层消息中间件的技术概念。甚至在特殊情况下，生产者与消费者可以完全使用不同的分布式消息技术，通过不同的 <code>Binder</code> 层适配依然可以把它们组合到一起。总而言之，合理地建立抽象是整个 <code>Spring</code> 生态家族的根本指导思想，也是 <code>Spring</code> 建立业界技术标准的根本途径。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Ethan Zhang</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://ethanzhang.cn/2021/03/02/qian-tan-wei-fu-wu-jia-gou-she-ji/">https://ethanzhang.cn/2021/03/02/qian-tan-wei-fu-wu-jia-gou-she-ji/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">Ethan Zhang</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Spring-Cloud/">
+                                    <span class="chip bg-color">Spring Cloud</span>
+                                </a>
+                            
+                                <a href="/tags/Microservices/">
+                                    <span class="chip bg-color">Microservices</span>
+                                </a>
+                            
+                                <a href="/tags/DDD/">
+                                    <span class="chip bg-color">DDD</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="wechat,qq,twitter,facebook,google" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'Tv296zBmWdAp6kTP0EouQhv7-gzGzoHsz',
+        appKey: 'cvewQxXSieNK6MCBNAxJxnd7',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mm',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'just go go'
+    });
+</script>
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/03/31/wei-fu-wu-wang-guan-yu-an-quan/">
+                    <div class="card-image">
+                        
+                        <img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/images34378168630_2ef45b6833_k.jpg" class="responsive-img" alt="微服务网关与安全">
+                        
+                        <span class="card-title">微服务网关与安全</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+API Gateway 网关服务作为微服务架构中系统外部与内部的网络屏障，安全策略的应用是必不可少的。我们知道在微服务架构设计中有一个重要原则，即服务的单一责任性，尤其是对于某一业务服务而言，理想状态下我们希望其仅承担某一项业务职责。而系
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-31
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Ethan Zhang
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Java/">
+                        <span class="chip bg-color">Java</span>
+                    </a>
+                    
+                    <a href="/tags/Spring-Security/">
+                        <span class="chip bg-color">Spring Security</span>
+                    </a>
+                    
+                    <a href="/tags/Spring-Cloud-Gateway/">
+                        <span class="chip bg-color">Spring Cloud Gateway</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/12/31/spring-shi-wu-chou-xiang-dai-lai-de-si-kao/">
+                    <div class="card-image">
+                        
+                        <img src="https://ethanzhang-1256933438.cos.ap-shanghai.myqcloud.com/blog/images7a862f02-ab41-49c5-9b4a-37b413505751.jpg" class="responsive-img" alt="Spring 事务抽象带来的思考">
+                        
+                        <span class="card-title">Spring 事务抽象带来的思考</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+一般来说，在一个复杂系统中，我们会集成很多的 data access frameworks，也就是所谓的数据持久层框架，例如通过 Hibernate，MyBatis 操作 Mysql 这样的关系型数据库，亦或是通过 Jedis，Redis
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-31
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Ethan Zhang
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Java/">
+                        <span class="chip bg-color">Java</span>
+                    </a>
+                    
+                    <a href="/tags/Spring-Framework/">
+                        <span class="chip bg-color">Spring Framework</span>
+                    </a>
+                    
+                    <a href="/tags/Transaction/">
+                        <span class="chip bg-color">Transaction</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="5360780890"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2021</span>
+            
+            <span id="year">2019</span>
+            <a href="/about" target="_blank">Ethan Zhang</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">62.8k</span>&nbsp;字
+            
+            
+            
+            
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2019";
+                    var startMonth = "9";
+                    var startDate = "18";
+                    var startHour = "0";
+                    var startMinute = "0";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/ethan-zhang-github" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:yixiezi1994@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=975362287" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 975362287" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+
+    
+
+    
+
+	
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
